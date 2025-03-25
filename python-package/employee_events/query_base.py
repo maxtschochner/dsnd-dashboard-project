@@ -1,5 +1,5 @@
 # Import any dependencies needed to execute sql queries
-from sql_execution import QueryMixin
+from .sql_execution import QueryMixin
 
 # Define a class called QueryBase
 # Use inheritance to add methods
@@ -31,21 +31,24 @@ class QueryBase(QueryMixin):
         # Use f-string formatting to set the name
         # of id columns used for joining
         # order by the event_date column
-        query_string = f'SELECT COUNT(positive_events), COUNT(negative_events) FROM {name} JOIN employee_events GROUP BY event_date ORDER BY event_date'
+        query_string = (f"""
+                        SELECT SUM(positive_events), SUM(negative_events)
+                        FROM {self.name}
+                        JOIN employee_events
+                        ON {self.name}.{self.name}_id=employee_events.{self.name}_id
+                        WHERE {self.name}.{self.name}_id = {id}
+                        GROUP BY event_date
+                        ORDER BY event_date""")
+        
+        # Print statement for debugging
+        # print(query_string)
 
-        # Examples
-        # from sqlite3 import connect
-        # mycon = connect('employee_events.db')
-        # mycur = mycon.cursor()
-        # print(mycur.execute("SELECT event_date, team.team_id FROM team JOIN employee_events ON team.team_id=employee_events.team_id LIMIT 10").fetchall())
-
-        self.pandas_query(query_string)
-            
-    
+        return self.pandas_query(query_string)
+              
 
     # Define a `notes` method that receives an id argument
     # This function should return a pandas dataframe
-    # YOUR CODE HERE
+    def notes(self, id):
 
         # QUERY 2
         # Write an SQL query that returns `note_date`, and `note`
@@ -54,5 +57,15 @@ class QueryBase(QueryMixin):
         # with f-string formatting
         # so the query returns the notes
         # for the table name in the `name` class attribute
-        # YOUR CODE HERE
+        query_string = (f"""
+                        SELECT note_date, note
+                        FROM notes
+                        JOIN {self.name}
+                        ON {self.name}.{self.name}_id=notes.{self.name}_id
+                        WHERE {self.name}.{self.name}_id = {id}""")
+        
+        # Print statement for debugging
+        # print(query_string)
+
+        return self.pandas_query(query_string)
 
