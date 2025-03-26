@@ -10,3 +10,4 @@ ipython
 #### Add text to install the python-package here
 setuptools
 # installed employee_events with "pip install -e ." from the "python-packages" directory as described in https://knowledge.udacity.com/questions/1063235
+sqlite-minutils
