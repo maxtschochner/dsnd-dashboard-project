@@ -33,7 +33,7 @@ class ReportDropdown(Dropdown):
     def build_component(self, entity_id, model):
         #  Set the `label` attribute so it is set
         #  to the `name` attribute for the model
-        self.label = model.name # ???
+        self.label = model.name
         
         # Return the output from the
         # parent class's build_component method
@@ -47,65 +47,64 @@ class ReportDropdown(Dropdown):
         # call the employee_events method
         # that returns the user-type's
         # names and ids
-        return model.emplo # ???
+        return model.names()
 
 
 # Create a subclass of base_components/BaseComponent
 # called `Header`
-#### YOUR CODE HERE
+class Header(BaseComponent):
 
     # Overwrite the `build_component` method
     # Ensure the method has the same parameters
     # as the parent class
-    #### YOUR CODE HERE
+    def build_component(self, entity_id, model):
         
         # Using the model argument for this method
         # return a fasthtml H1 objects
         # containing the model's name attribute
-        #### YOUR CODE HERE
+        return f'H1({model.name})'
           
 
 # Create a subclass of base_components/MatplotlibViz
 # called `LineChart`
-#### YOUR CODE HERE
+class LineChart(MatplotlibViz):
     
     # Overwrite the parent class's `visualization`
     # method. Use the same parameters as the parent
-    #### YOUR CODE HERE
-    
+    def visualization(self, entity_id, model):
 
         # Pass the `asset_id` argument to
         # the model's `event_counts` method to
         # receive the x (Day) and y (event count)
-        #### YOUR CODE HERE
+        events_counts_pdf = model.event_counts(entity_id)
         
         # Use the pandas .fillna method to fill nulls with 0
-        #### YOUR CODE HERE
+        events_counts_pdf = events_counts_pdf.fillna(0)
         
         # User the pandas .set_index method to set
         # the date column as the index
-        #### YOUR CODE HERE
+        events_counts_pdf = events_counts_pdf.set_index(events_counts_pdf.columns[0])
         
         # Sort the index
-        #### YOUR CODE HERE
+        events_counts_pdf = events_counts_pdf.sort_index()
         
         # Use the .cumsum method to change the data
         # in the dataframe to cumulative counts
-        #### YOUR CODE HERE
+        events_counts_pdf = events_counts_pdf.cumsum()
         
         
         # Set the dataframe columns to the list
         # ['Positive', 'Negative']
-        #### YOUR CODE HERE
+        events_counts_pdf.columns = ['Positive', 'Negative']
         
         # Initialize a pandas subplot
         # and assign the figure and axis
         # to variables
-        #### YOUR CODE HERE
+        fig, ax = plt.subplots(1,1)
         
         # call the .plot method for the
         # cumulative counts dataframe
-        #### YOUR CODE HERE
+        events_counts_pdf.plot(ax=ax)
         
         # pass the axis variable
         # to the `.set_axis_styling`
@@ -114,38 +113,39 @@ class ReportDropdown(Dropdown):
         # the border color and font color to black. 
         # Reference the base_components/matplotlib_viz file 
         # to inspect the supported keyword arguments
-        #### YOUR CODE HERE
+        self.set_axis_styling(ax, bordercolor='black', fontcolor='black')
         
         # Set title and labels for x and y axis
-        #### YOUR CODE HERE
+        ax.set_title('Performance Plot')
+        ax.set_xlabel('Date')
+        ax.set_ylabel('Cumulated Positive and Negative Events')
 
 
 # Create a subclass of base_components/MatplotlibViz
 # called `BarChart`
-#### YOUR CODE HERE
-
+class BarChart(MatplotlibViz):
     # Create a `predictor` class attribute
     # assign the attribute to the output
     # of the `load_model` utils function
-    #### YOUR CODE HERE
+    predictor = load_model()
 
     # Overwrite the parent class `visualization` method
     # Use the same parameters as the parent
-    #### YOUR CODE HERE
+    def visualization(self, entity_id, model):
 
         # Using the model and asset_id arguments
         # pass the `asset_id` to the `.model_data` method
         # to receive the data that can be passed to the machine
         # learning model
-        #### YOUR CODE HERE
+        data_for_ml = model.model_data(entity_id)
         
         # Using the predictor class attribute
         # pass the data to the `predict_proba` method
-        #### YOUR CODE HERE
+        pred_data = model.predict_proba(data_for_ml)
         
         # Index the second column of predict_proba output
         # The shape should be (<number of records>, 1)
-        #### YOUR CODE HERE
+        sec_index_pred_data = pred_data[:, 2]
         
         
         # Below, create a `pred` variable set to
@@ -153,14 +153,16 @@ class ReportDropdown(Dropdown):
         #
         # If the model's name attribute is "team"
         # We want to visualize the mean of the predict_proba output
-        #### YOUR CODE HERE
+        if model.name == 'team':
+            pred = sum(sec_index_pred_data) / len(sec_index_pred_data)
             
         # Otherwise set `pred` to the first value
         # of the predict_proba output
-        #### YOUR CODE HERE
+        if model.name != 'team':
+            pred = sec_index_pred_data[0]
         
         # Initialize a matplotlib subplot
-        #### YOUR CODE HERE
+        fig, ax = plt.subplots(1,1)
         
         # Run the following code unchanged
         ax.barh([''], [pred])
@@ -170,7 +172,7 @@ class ReportDropdown(Dropdown):
         # pass the axis variable
         # to the `.set_axis_styling`
         # method
-        #### YOUR CODE HERE
+        self.set_axis_styling(ax=ax)
  
 # Create a subclass of combined_components/CombinedComponent
 # called Visualizations       

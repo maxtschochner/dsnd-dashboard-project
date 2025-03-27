@@ -32,7 +32,7 @@ class QueryBase(QueryMixin):
         # of id columns used for joining
         # order by the event_date column
         query_string = (f"""
-                        SELECT SUM(positive_events), SUM(negative_events)
+                        SELECT event_date AS event_date, SUM(positive_events) AS sum_pos, SUM(negative_events) AS sum_neg
                         FROM {self.name}
                         JOIN employee_events
                         ON {self.name}.{self.name}_id=employee_events.{self.name}_id
@@ -41,7 +41,7 @@ class QueryBase(QueryMixin):
                         ORDER BY event_date""")
         
         # Print statement for debugging
-        # print(query_string)
+        print(query_string)
 
         return self.pandas_query(query_string)
               

@@ -41,6 +41,8 @@ class QueryMixin:
         cursor = connection.cursor()
         result = cursor.execute(query_string).fetchall()
 
+        # print(result)
+
         # Close connection to the database
         connection.close()
 
