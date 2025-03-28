@@ -62,7 +62,8 @@ class Header(BaseComponent):
         # Using the model argument for this method
         # return a fasthtml H1 objects
         # containing the model's name attribute
-        return f'H1({model.name})'
+        # return f'Div(H1("{model.name}"))'
+        return Div(H1(f"{model.name}"))
           
 
 # Create a subclass of base_components/MatplotlibViz
@@ -141,11 +142,11 @@ class BarChart(MatplotlibViz):
         
         # Using the predictor class attribute
         # pass the data to the `predict_proba` method
-        pred_data = model.predict_proba(data_for_ml)
+        pred_data = self.predictor.predict_proba(data_for_ml)
         
         # Index the second column of predict_proba output
         # The shape should be (<number of records>, 1)
-        sec_index_pred_data = pred_data[:, 2]
+        sec_index_pred_data = pred_data[:, 1]
         
         
         # Below, create a `pred` variable set to

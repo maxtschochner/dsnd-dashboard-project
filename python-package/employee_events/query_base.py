@@ -40,8 +40,6 @@ class QueryBase(QueryMixin):
                         GROUP BY event_date
                         ORDER BY event_date""")
         
-        # Print statement for debugging
-        print(query_string)
 
         return self.pandas_query(query_string)
               
@@ -64,8 +62,6 @@ class QueryBase(QueryMixin):
                         ON {self.name}.{self.name}_id=notes.{self.name}_id
                         WHERE {self.name}.{self.name}_id = {id}""")
         
-        # Print statement for debugging
-        # print(query_string)
 
         return self.pandas_query(query_string)
 
