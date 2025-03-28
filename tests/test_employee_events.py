@@ -57,7 +57,7 @@ def test_team_table_exists(table_names):
 
     # Assert that the string 'team'
     # is in the table_names list
-    assert 'team' in table_names
+    assert 'tea' in table_names
 
 # Define a test function called
 # `test_employee_events_table_exists`
