@@ -175,6 +175,7 @@ class BarChart(MatplotlibViz):
         # method
         self.set_axis_styling(ax=ax)
  
+ 
 # Create a subclass of combined_components/CombinedComponent
 # called Visualizations       
 class Visualizations(CombinedComponent):
@@ -187,7 +188,8 @@ class Visualizations(CombinedComponent):
 
     # Leave this line unchanged
     outer_div_type = Div(cls='grid')
-            
+
+
 # Create a subclass of base_components/DataTable
 # called `NotesTable`
 class NotesTable(DataTable):
